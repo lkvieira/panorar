@@ -153,7 +153,7 @@ if (navToggle && navLinks) {
 
   wrapper?.addEventListener('wheel', e => {
     e.preventDefault();
-    setZoom(zoom + (e.deltaY < 0 ? 0.35 : -0.35), false);
+    setZoom(zoom + (e.deltaY < 0 ? 0.12 : -0.12), false);
   }, { passive: false });
 
   // ── eventos: arrastar para mover (mouse) ──────────
@@ -220,8 +220,8 @@ if (navToggle && navLinks) {
     hfov:         100,
     pitch:        0,
     yaw:          0,
-    mouseZoom:    true,
-    keyboardZoom: true,
+    mouseZoom:    false,  // desativado: evita zoom acidental ao rolar a página
+    keyboardZoom: false,
   });
 
   let isRotating = false;
