@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PANORAR — Visualizador 360°</title>
+    
+    <!-- CSS do Pannellum -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+    
+    <style>
+        /* Reset e estilo geral */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        #panorama {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Oculta a interface nativa do Pannellum para manter o design clean */
+        .pnlm-controls-container {
+            display: none !important;
+        }
+
+        /* Nossa UI Customizada com efeito Glassmorphism */
+        .custom-ui-container {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(20, 20, 20, 0.4);
+            padding: 12px 24px;
+            border-radius: 40px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-control {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+        }
+
+        .btn-control:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-control svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        /* Botão de retorno ao site principal */
+        .btn-back {
+            position: absolute;
+            top: 24px;
+            left: 32px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.55);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 0.95rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-decoration: none;
+            text-transform: uppercase;
+            z-index: 10;
+            transition: color 0.3s;
+        }
+        .btn-back:hover { color: rgba(255, 255, 255, 0.9); }
+        .btn-back svg { width: 16px; height: 16px; fill: currentColor; }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Retorno ao site principal -->
+    <a href="../index.html" class="btn-back">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        PANORAR
+    </a>
+
+    <!-- Container do Panorama -->
+    <div id="panorama"></div>
+
+    <!-- Interface Clean Customizada -->
+    <div class="custom-ui-container">
+        <button class="btn-control" id="btn-zoom-in" title="Aproximar">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        </button>
+        <button class="btn-control" id="btn-zoom-out" title="Afastar">
+            <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+        </button>
+        <button class="btn-control" id="btn-rotate" title="Rotação Automática">
+            <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        </button>
+        <button class="btn-control" id="btn-fullscreen" title="Tela Cheia">
+            <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+        </button>
+    </div>
+
+    <!-- JS do Pannellum -->
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    
+    <script>
+        // Inicialização do Visualizador
+        const viewer = pannellum.viewer('panorama', {
+            "type": "equirectangular",
+            // Substitua a URL abaixo pela sua imagem 360º (proporção 2:1)
+            "panorama": "360_Terreno_Palmeiras.jpg", 
+            "autoLoad": true,
+            "showControls": false, 
+            "compass": false,
+            "hfov": 100,      // Campo de visão inicial
+            "pitch": 0,       // Ângulo vertical inicial
+            "yaw": 0,         // Ângulo horizontal inicial
+            "mouseZoom": true,
+            "keyboardZoom": true
+        });
+
+        // Lógica dos Botões Customizados
+        document.getElementById('btn-zoom-in').addEventListener('click', () => {
+            viewer.setHfov(viewer.getHfov() - 15);
+        });
+
+        document.getElementById('btn-zoom-out').addEventListener('click', () => {
+            viewer.setHfov(viewer.getHfov() + 15);
+        });
+
+        let isRotating = false;
+        document.getElementById('btn-rotate').addEventListener('click', () => {
+            if (isRotating) {
+                viewer.stopAutoRotate();
+                isRotating = false;
+            } else {
+                viewer.startAutoRotate(-3); // Velocidade da rotação (negativo gira para a direita)
+                isRotating = true;
+            }
+        });
+
+        document.getElementById('btn-fullscreen').addEventListener('click', () => {
+            viewer.toggleFullscreen();
+        });
+    </script>
+</body>
+</html>
