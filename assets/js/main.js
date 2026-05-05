@@ -211,41 +211,58 @@ if (navToggle && navLinks) {
   const el = document.getElementById('panorama-360');
   if (!el || typeof pannellum === 'undefined') return;
 
-  const viewer = pannellum.viewer('panorama-360', {
-    type:         'equirectangular',
-    panorama:     'Visualizador%20360/360_Terreno_Palmeiras.jpg',
-    autoLoad:     true,
-    showControls: false,
-    compass:      false,
-    hfov:         100,
-    pitch:        0,
-    yaw:          0,
-    mouseZoom:    false,  // desativado: evita zoom acidental ao rolar a página
-    keyboardZoom: false,
-  });
-
-  let isRotating = false;
-
   const btnZoomIn     = document.getElementById('btn-360-zoomin');
   const btnZoomOut    = document.getElementById('btn-360-zoomout');
   const btnRotate     = document.getElementById('btn-360-rotate');
   const btnFullscreen = document.getElementById('btn-360-fullscreen');
 
-  btnZoomIn?.addEventListener('click', () => {
-    viewer.setHfov(Math.max(30, viewer.getHfov() - 15));
-  });
-  btnZoomOut?.addEventListener('click', () => {
-    viewer.setHfov(Math.min(120, viewer.getHfov() + 15));
-  });
-  btnRotate?.addEventListener('click', () => {
-    if (isRotating) {
-      viewer.stopAutoRotate();
-      btnRotate.classList.remove('active');
-    } else {
-      viewer.startAutoRotate(-2.5);
-      btnRotate.classList.add('active');
-    }
-    isRotating = !isRotating;
-  });
-  btnFullscreen?.addEventListener('click', () => viewer.toggleFullscreen());
+  let viewer     = null;
+  let isRotating = true;
+  let started    = false;
+
+  function start() {
+    if (started) return;
+    started = true;
+
+    viewer = pannellum.viewer('panorama-360', {
+      type:         'equirectangular',
+      panorama:     'Visualizador%20360/360_Terreno_Palmeiras.jpg',
+      autoLoad:     true,
+      showControls: false,
+      compass:      false,
+      hfov:         100,
+      pitch:        0,
+      yaw:          0,
+      mouseZoom:    false,  // evita zoom acidental ao rolar a página
+      keyboardZoom: false,
+      autoRotate:   -2.5,   // rotação ativa por padrão
+    });
+
+    // marca o botão de rotação como ativo após carregamento
+    viewer.on('load', () => btnRotate?.classList.add('active'));
+
+    btnZoomIn?.addEventListener('click', () =>
+      viewer.setHfov(Math.max(30, viewer.getHfov() - 15)));
+    btnZoomOut?.addEventListener('click', () =>
+      viewer.setHfov(Math.min(120, viewer.getHfov() + 15)));
+    btnRotate?.addEventListener('click', () => {
+      isRotating = !isRotating;
+      isRotating ? viewer.startAutoRotate(-2.5) : viewer.stopAutoRotate();
+      btnRotate.classList.toggle('active', isRotating);
+    });
+    btnFullscreen?.addEventListener('click', () => viewer.toggleFullscreen());
+  }
+
+  // Inicializa o viewer apenas quando a seção 360° entrar no viewport.
+  // Isso evita carregar 84 MB ao abrir a página (causa crash em mobile).
+  const observer = new IntersectionObserver(
+    entries => {
+      if (entries[0].isIntersecting) {
+        start();
+        observer.disconnect();
+      }
+    },
+    { rootMargin: '300px', threshold: 0 }
+  );
+  observer.observe(el);
 })();

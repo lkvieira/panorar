@@ -677,8 +677,14 @@ dialog#lightbox[open] {
   }
 }
 
+@media (max-width: 600px) {
+  .hero-title {
+    font-size: clamp(15px, 4.8vw, 22px);
+    letter-spacing: 0.05em;
+  }
+}
+
 @media (max-width: 480px) {
-  .hero-title { font-size: 52px; letter-spacing: 0.2em; }
   #panorama-360 { height: 280px; }
   .viewer-controls { padding: 8px 14px; gap: 6px; }
   .btn-360 { width: 34px; height: 34px; }
