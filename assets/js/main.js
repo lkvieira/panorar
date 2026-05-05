@@ -253,11 +253,7 @@ if (navToggle && navLinks) {
     btnFullscreen?.addEventListener('click', () => viewer.toggleFullscreen());
   }
 
-  // Em mobile (< 768px) o Pannellum não é inicializado:
-  // a imagem de 84 MB causa crash de memória WebGL em dispositivos móveis.
-  if (window.innerWidth < 768) return;
-
-  // No desktop, inicializa apenas quando a seção entrar no viewport.
+  // Inicializa apenas quando a seção entrar no viewport.
   const observer = new IntersectionObserver(
     entries => {
       if (entries[0].isIntersecting) {

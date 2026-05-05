@@ -682,10 +682,8 @@ dialog#lightbox[open] {
 
   .nav-slogan { display: none; }
 
-  /* Oculta viewer 360° no mobile — imagem de 84 MB causa crash em WebGL */
-  .viewer-360-wrapper { display: none; }
-  .viewer-hint        { display: none; }
-  .viewer-mobile-msg  { display: flex; }
+  /* viewer 360° ativo no mobile — imagem otimizada para ~2 MB */
+  .viewer-mobile-msg  { display: none; }
 
   .nav-links {
     position: fixed;
