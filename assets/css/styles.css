@@ -55,6 +55,12 @@ button { font-family: inherit; }
   box-shadow: 0 1px 0 var(--border);
 }
 
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .nav-logo {
   font-family: var(--font-display);
   font-size: 1.4rem;
@@ -62,8 +68,21 @@ button { font-family: inherit; }
   letter-spacing: 0.35em;
   color: var(--text);
   transition: color 0.3s;
+  white-space: nowrap;
 }
 .nav-logo:hover { color: var(--gold); }
+
+.nav-slogan {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  border-left: 1px solid var(--border);
+  padding-left: 20px;
+  white-space: nowrap;
+}
 
 .nav-links {
   display: flex;
@@ -425,6 +444,32 @@ button { font-family: inherit; }
   color: var(--text-muted);
 }
 
+/* Placeholder exibido no mobile (viewer não carrega em telas pequenas) */
+.viewer-mobile-msg {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  height: 260px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 24px;
+}
+.viewer-mobile-msg svg {
+  width: 48px;
+  height: 48px;
+  opacity: 0.3;
+}
+.viewer-mobile-msg p {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+  opacity: 0.6;
+}
+
 
 /* ==============================
    CONTACT
@@ -634,6 +679,13 @@ dialog#lightbox[open] {
 
 @media (max-width: 768px) {
   #navbar { padding: 0 24px; }
+
+  .nav-slogan { display: none; }
+
+  /* Oculta viewer 360° no mobile — imagem de 84 MB causa crash em WebGL */
+  .viewer-360-wrapper { display: none; }
+  .viewer-hint        { display: none; }
+  .viewer-mobile-msg  { display: flex; }
 
   .nav-links {
     position: fixed;

@@ -24,7 +24,10 @@
        NAVEGAÇÃO
        ============================== -->
   <header id="navbar">
-    <a href="#hero" class="nav-logo">PANORAR</a>
+    <div class="nav-brand">
+      <a href="#hero" class="nav-logo">PANORAR</a>
+      <span class="nav-slogan">Perspectivas que transformam</span>
+    </div>
     <nav aria-label="Menu principal">
       <ul class="nav-links">
         <li><a href="#imagens">Imagens</a></li>
@@ -166,6 +169,16 @@
       </div>
 
       <p class="viewer-hint">Clique e arraste para explorar &nbsp;·&nbsp; Use o scroll para aproximar</p>
+
+      <!-- Exibido apenas no mobile (Pannellum não é carregado em telas pequenas) -->
+      <div class="viewer-mobile-msg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10" opacity="0.4"/>
+          <path d="M2 12c0 0 4-6 10-6s10 6 10 6-4 6-10 6S2 12 2 12" opacity="0.4"/>
+          <circle cx="12" cy="12" r="3" opacity="0.4"/>
+        </svg>
+        <p>A experiência 360° está disponível na versão desktop</p>
+      </div>
     </div>
   </section>
 
