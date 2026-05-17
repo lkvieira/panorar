@@ -755,7 +755,53 @@ dialog#lightbox[open] {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: padding 0.2s var(--ease), min-width 0.2s var(--ease);
 }
+
+/* Botão hambúrguer (minimizar/expandir painel) */
+.map-panel-toggle {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  border-radius: 3px;
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.map-panel-toggle:hover { color: var(--gold); background: rgba(255,255,255,0.06); }
+.map-panel-toggle .icon-open  { display: none; }
+.map-panel-toggle .icon-close { display: block; }
+
+.map-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 28px; /* espaço para o botão de toggle no canto */
+}
+
+/* Estado minimizado: só o botão hambúrguer visível */
+.map-selector-box.is-collapsed {
+  padding: 0;
+  min-width: 0;
+  background: rgba(18, 18, 18, 0.82);
+  border-radius: 4px;
+}
+.map-selector-box.is-collapsed .map-panel-content { display: none; }
+.map-selector-box.is-collapsed .map-panel-toggle {
+  position: static;
+  width: 40px;
+  height: 40px;
+}
+.map-selector-box.is-collapsed .map-panel-toggle .icon-open  { display: block; }
+.map-selector-box.is-collapsed .map-panel-toggle .icon-close { display: none; }
 
 .map-selector-title {
   font-size: 0.62rem;
@@ -943,6 +989,31 @@ dialog#lightbox[open] {
   height: 100vh;
 }
 
+/* Pseudo-fullscreen (fallback para mobile/iOS Safari onde a Fullscreen API
+   nativa não funciona em elementos genéricos) */
+.is-pseudo-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important; /* dynamic viewport — exclui barras do mobile */
+  z-index: 9999 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+.is-pseudo-fullscreen .map-canvas,
+.is-pseudo-fullscreen .map-compare-container,
+.is-pseudo-fullscreen #panorama-360 {
+  height: 100vh !important;
+  height: 100dvh !important;
+}
+/* Quando algum wrapper entra em pseudo-fullscreen, esconde o body scroll */
+body.has-pseudo-fullscreen { overflow: hidden; }
+
 /* Overrides Leaflet — tema dark */
 .leaflet-container {
   background: var(--surface2);
@@ -1020,6 +1091,7 @@ dialog#lightbox[open] {
     min-width: 0;
     max-width: calc(100% - 16px);
   }
+  .map-selector-box.is-collapsed { padding: 0; }
   .map-radio { font-size: 0.72rem; }
   .map-legend {
     bottom: 8px;

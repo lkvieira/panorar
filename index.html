@@ -207,47 +207,58 @@
         </div>
 
         <div id="map-selector-box" class="map-selector-box">
-          <span class="map-selector-title">Camada</span>
-          <label class="map-radio"><input type="radio" name="map-layer" value="orto" checked><span>Ortomosaico</span></label>
-          <label class="map-radio"><input type="radio" name="map-layer" value="fito"><span>Fitossanidade</span></label>
-          <label class="map-radio"><input type="radio" name="map-layer" value="mds"><span>Modelo de Superfície</span></label>
+          <button id="map-panel-toggle" class="map-panel-toggle" aria-label="Minimizar painel" aria-expanded="true" title="Minimizar painel">
+            <svg class="icon-open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M4 7h16M4 12h16M4 17h16"/>
+            </svg>
+            <svg class="icon-close" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M6 6l12 12M18 6l-12 12"/>
+            </svg>
+          </button>
 
-          <hr class="map-selector-sep">
+          <div class="map-panel-content">
+            <span class="map-selector-title">Camada</span>
+            <label class="map-radio"><input type="radio" name="map-layer" value="orto" checked><span>Ortomosaico</span></label>
+            <label class="map-radio"><input type="radio" name="map-layer" value="fito"><span>Fitossanidade</span></label>
+            <label class="map-radio"><input type="radio" name="map-layer" value="mds"><span>Modelo de Superfície</span></label>
 
-          <label class="map-radio map-toggle-labels">
-            <input type="checkbox" id="map-labels-toggle" checked>
-            <span>Mostrar rótulos</span>
-          </label>
+            <hr class="map-selector-sep">
 
-          <hr class="map-selector-sep">
+            <label class="map-radio map-toggle-labels">
+              <input type="checkbox" id="map-labels-toggle" checked>
+              <span>Mostrar rótulos</span>
+            </label>
 
-          <div class="map-action-row">
-            <button id="map-compare-toggle" class="map-compare-toggle" aria-pressed="false" aria-controls="map-compare-container">
-              Comparar
-            </button>
-            <button id="btn-mapa-fullscreen" class="btn-mapa" aria-label="Tela cheia" title="Tela cheia">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
-              </svg>
-            </button>
-          </div>
+            <hr class="map-selector-sep">
 
-          <div id="map-compare-pair" class="map-compare-pair" hidden>
-            <div class="map-compare-side">
-              <span>Esquerda</span>
-              <select id="map-left-select">
-                <option value="orto" selected>Ortomosaico</option>
-                <option value="fito">Fitossanidade</option>
-                <option value="mds">MDS</option>
-              </select>
+            <div class="map-action-row">
+              <button id="map-compare-toggle" class="map-compare-toggle" aria-pressed="false" aria-controls="map-compare-container">
+                Comparar
+              </button>
+              <button id="btn-mapa-fullscreen" class="btn-mapa" aria-label="Tela cheia" title="Tela cheia">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+                </svg>
+              </button>
             </div>
-            <div class="map-compare-side">
-              <span>Direita</span>
-              <select id="map-right-select">
-                <option value="orto">Ortomosaico</option>
-                <option value="fito">Fitossanidade</option>
-                <option value="mds" selected>MDS</option>
-              </select>
+
+            <div id="map-compare-pair" class="map-compare-pair" hidden>
+              <div class="map-compare-side">
+                <span>Esquerda</span>
+                <select id="map-left-select">
+                  <option value="orto" selected>Ortomosaico</option>
+                  <option value="fito">Fitossanidade</option>
+                  <option value="mds">MDS</option>
+                </select>
+              </div>
+              <div class="map-compare-side">
+                <span>Direita</span>
+                <select id="map-right-select">
+                  <option value="orto">Ortomosaico</option>
+                  <option value="fito">Fitossanidade</option>
+                  <option value="mds" selected>MDS</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>

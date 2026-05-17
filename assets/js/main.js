@@ -34,6 +34,57 @@ if (navToggle && navLinks) {
 }
 
 // ==============================
+// FULLSCREEN — API nativa com fallback pseudo-fullscreen (iOS Safari)
+// ==============================
+
+function isFullscreenActive(el) {
+  return document.fullscreenElement === el
+      || document.webkitFullscreenElement === el
+      || el.classList.contains('is-pseudo-fullscreen');
+}
+
+function toggleFullscreen(el, onChange) {
+  const exit = () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
+    } else if (el.classList.contains('is-pseudo-fullscreen')) {
+      el.classList.remove('is-pseudo-fullscreen');
+      document.body.classList.remove('has-pseudo-fullscreen');
+      onChange?.();
+    }
+  };
+
+  if (isFullscreenActive(el)) { exit(); return; }
+
+  const req = el.requestFullscreen || el.webkitRequestFullscreen;
+  if (req) {
+    try {
+      const p = req.call(el);
+      if (p && typeof p.catch === 'function') p.catch(() => applyPseudo());
+      return;
+    } catch (_) { /* cai no fallback */ }
+  }
+  applyPseudo();
+
+  function applyPseudo() {
+    el.classList.add('is-pseudo-fullscreen');
+    document.body.classList.add('has-pseudo-fullscreen');
+    onChange?.();
+    // Permite sair com Esc
+    const onKey = e => {
+      if (e.key === 'Escape') {
+        el.classList.remove('is-pseudo-fullscreen');
+        document.body.classList.remove('has-pseudo-fullscreen');
+        onChange?.();
+        document.removeEventListener('keydown', onKey);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+  }
+}
+
+
+// ==============================
 // LIGHTBOX — zoom, drag, setas
 // ==============================
 
@@ -250,7 +301,13 @@ if (navToggle && navLinks) {
       isRotating ? viewer.startAutoRotate(-2.5) : viewer.stopAutoRotate();
       btnRotate.classList.toggle('active', isRotating);
     });
-    btnFullscreen?.addEventListener('click', () => viewer.toggleFullscreen());
+    btnFullscreen?.addEventListener('click', () => {
+      // Em mobile/iOS, viewer.toggleFullscreen() do Pannellum usa a Fullscreen API
+      // nativa que falha silenciosamente no iOS Safari. Usamos nosso utilitário
+      // com fallback pseudo-fullscreen no wrapper, que sempre funciona.
+      const wrap = el.closest('.viewer-360-wrapper') || el;
+      toggleFullscreen(wrap, () => viewer.resize());
+    });
   }
 
   // Inicializa apenas quando a seção entrar no viewport.
@@ -573,16 +630,28 @@ if (navToggle && navLinks) {
     const labelsToggle = document.getElementById('map-labels-toggle');
     labelsToggle?.addEventListener('change', e => setLabelsVisible(e.target.checked));
 
+    // Toggle do painel (minimizar/expandir)
+    const panelBox    = document.getElementById('map-selector-box');
+    const panelToggle = document.getElementById('map-panel-toggle');
+    const setPanelCollapsed = collapsed => {
+      panelBox.classList.toggle('is-collapsed', collapsed);
+      panelToggle.setAttribute('aria-expanded', String(!collapsed));
+      panelToggle.setAttribute('aria-label', collapsed ? 'Expandir painel' : 'Minimizar painel');
+      panelToggle.setAttribute('title', collapsed ? 'Expandir painel' : 'Minimizar painel');
+    };
+    panelToggle?.addEventListener('click', () => setPanelCollapsed(!panelBox.classList.contains('is-collapsed')));
+    // Default: minimizado em telas pequenas
+    if (window.matchMedia('(max-width: 768px)').matches) setPanelCollapsed(true);
+
+    // Fullscreen — Fullscreen API nativa com fallback para pseudo-fullscreen (mobile/iOS)
     const wrapper = document.querySelector('.map-viewer-wrapper');
     const fsBtn   = document.getElementById('btn-mapa-fullscreen');
-    fsBtn?.addEventListener('click', () => {
-      const isFs = document.fullscreenElement || document.webkitFullscreenElement;
-      if (!isFs) {
-        (wrapper.requestFullscreen || wrapper.webkitRequestFullscreen)?.call(wrapper);
-      } else {
-        (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
-      }
-    });
+    fsBtn?.addEventListener('click', () => toggleFullscreen(wrapper, () => {
+      mapSingle?.invalidateSize();
+      mapLeft?.invalidateSize();
+      mapRight?.invalidateSize();
+      if (compareMode) applyCompareClip(currentRatio);
+    }));
     const onFsChange = () => {
       setTimeout(() => {
         mapSingle?.invalidateSize();
