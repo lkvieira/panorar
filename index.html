@@ -15,6 +15,9 @@
   <!-- Pannellum CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
 
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+
   <!-- Estilos -->
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
@@ -33,6 +36,7 @@
         <li><a href="#imagens">Imagens</a></li>
         <li><a href="#videos">Vídeos</a></li>
         <li><a href="#experiencia360">360°</a></li>
+        <li><a href="#mapas">Mapas</a></li>
         <li><a href="#contato">Contato</a></li>
       </ul>
     </nav>
@@ -50,7 +54,7 @@
   <section id="hero">
     <div class="hero-bg"></div>
     <div class="hero-content">
-      <h1 class="hero-title">TERRENO &nbsp;|&nbsp; BELO HORIZONTE/MG</h1>
+      <h1 class="hero-title">TERRENO &nbsp;|&nbsp; LOTE</h1>
     </div>
     <a href="#portfolio" class="scroll-indicator" aria-label="Ver portfólio"></a>
   </section>
@@ -184,6 +188,86 @@
 
 
   <!-- ==============================
+       MAPAS — WEBODM
+       ============================== -->
+  <section id="mapas" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Camadas de Inteligência Geográfica</span>
+        <h2 class="section-title">Mapas</h2>
+      </div>
+
+      <div class="map-viewer-wrapper">
+        <div id="map-canvas-single" class="map-canvas"></div>
+
+        <div id="map-compare-container" class="map-compare-container" hidden>
+          <div id="map-canvas-left"  class="map-canvas map-canvas-left"></div>
+          <div id="map-canvas-right" class="map-canvas map-canvas-right"></div>
+          <div id="map-compare-slider" class="map-compare-slider" aria-label="Arraste para comparar"></div>
+        </div>
+
+        <div id="map-selector-box" class="map-selector-box">
+          <span class="map-selector-title">Camada</span>
+          <label class="map-radio"><input type="radio" name="map-layer" value="orto" checked><span>Ortomosaico</span></label>
+          <label class="map-radio"><input type="radio" name="map-layer" value="fito"><span>Fitossanidade</span></label>
+          <label class="map-radio"><input type="radio" name="map-layer" value="mds"><span>Modelo de Superfície</span></label>
+
+          <hr class="map-selector-sep">
+
+          <label class="map-radio map-toggle-labels">
+            <input type="checkbox" id="map-labels-toggle" checked>
+            <span>Mostrar rótulos</span>
+          </label>
+
+          <hr class="map-selector-sep">
+
+          <div class="map-action-row">
+            <button id="map-compare-toggle" class="map-compare-toggle" aria-pressed="false" aria-controls="map-compare-container">
+              Comparar
+            </button>
+            <button id="btn-mapa-fullscreen" class="btn-mapa" aria-label="Tela cheia" title="Tela cheia">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+              </svg>
+            </button>
+          </div>
+
+          <div id="map-compare-pair" class="map-compare-pair" hidden>
+            <div class="map-compare-side">
+              <span>Esquerda</span>
+              <select id="map-left-select">
+                <option value="orto" selected>Ortomosaico</option>
+                <option value="fito">Fitossanidade</option>
+                <option value="mds">MDS</option>
+              </select>
+            </div>
+            <div class="map-compare-side">
+              <span>Direita</span>
+              <select id="map-right-select">
+                <option value="orto">Ortomosaico</option>
+                <option value="fito">Fitossanidade</option>
+                <option value="mds" selected>MDS</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="map-legend" class="map-legend" hidden>
+          <span id="map-legend-title" class="map-legend-title"></span>
+          <div id="map-legend-bar" class="map-legend-bar"></div>
+          <div id="map-legend-labels" class="map-legend-labels"></div>
+          <span id="map-legend-note" class="map-legend-note" hidden></span>
+          <span id="map-legend-disclaimer" class="map-legend-disclaimer" hidden></span>
+        </div>
+      </div>
+
+      <p class="viewer-hint">Arraste o mapa &nbsp;·&nbsp; Use o scroll para aproximar</p>
+      <p class="map-quality-disclaimer">Mapas exibidos aqui em resolução otimizada para web. Entregas ao cliente são realizadas na qualidade máxima original.</p>
+    </div>
+  </section>
+
+
+  <!-- ==============================
        CONTATO
        ============================== -->
   <section id="contato" class="section section-alt">
@@ -245,6 +329,7 @@
        SCRIPTS
        ============================== -->
   <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="assets/js/main.js"></script>
 
 </body>

@@ -1,0 +1,76 @@
+Coloque aqui os 3 mapas exportados do WebODM (formato JPEG):
+
+  orto.jpg            -> ortomosaico RGB
+  fitossanidade.jpg   -> mapa de fitossanidade (VARI ou NDVI colorizado em RdYlGn)
+  mds.jpg             -> modelo digital de superfície colorizado em "jet"
+
+DICA: redimensione cada JPEG para no máximo ~2048 px no lado maior
+e use qualidade 80-85% (resultado ideal: 1-2 MB por arquivo).
+Isso garante carregamento rápido em mobile sem perda visual perceptível.
+
+
+====================================================================
+CONFIGURAÇÃO — arquivo: assets/js/main.js
+====================================================================
+
+Todas as variáveis editáveis estão no início do bloco "MAPAS" no JS,
+dentro da seção marcada como "CONFIGURAÇÃO".
+
+
+1) BOUNDS (área coberta pelo voo)
+---------------------------------
+Procure a constante PLACEHOLDER_BOUNDS e preencha as 4 coordenadas
+extraídas do KMZ do WebODM.
+
+  Formato Leaflet: [[south, west], [north, east]]
+
+Como obter:
+  - No WebODM, exporte um KMZ de qualquer um dos 3 mapas (todos cobrem
+    a mesma área).
+  - Renomeie o .kmz para .zip e descompacte.
+  - Abra o arquivo doc.kml em um editor de texto.
+  - Procure por <GroundOverlay> e dentro dele <LatLonBox>:
+
+        <north>-19.92345</north>
+        <south>-19.93210</south>
+        <east>-43.93210</east>
+        <west>-43.94000</west>
+
+    Se só houver <LatLonAltBox> (dentro de <Region>), use os mesmos
+    valores north/south/east/west; ignore minAltitude/maxAltitude.
+
+  - No main.js substitua para:
+        const PLACEHOLDER_BOUNDS = [[-19.93210, -43.94000], [-19.92345, -43.93210]];
+
+
+2) ELEVAÇÃO MÍNIMA E MÁXIMA DO MDS (em metros acima do nível do mar)
+--------------------------------------------------------------------
+Procure as constantes MDS_MIN_M e MDS_MAX_M. Por padrão estão como null
+(a legenda mostra apenas "Min" e "Max" sem valores numéricos).
+
+Como obter os valores no WebODM:
+  - Abra o projeto no WebODM.
+  - Clique no mapa "DSM" (Digital Surface Model) na lista de camadas.
+  - No painel de propriedades, veja "Min" e "Max" em metros.
+  - Alternativamente, passe o cursor sobre os pontos mais baixo e mais
+    alto do terreno e leia o valor "Elevation".
+
+Edite no main.js:
+        const MDS_MIN_M = 850;   // ex: ponto mais baixo do terreno
+        const MDS_MAX_M = 920;   // ex: ponto mais alto do terreno
+
+A legenda do site passará a mostrar "850 m" e "920 m" automaticamente,
+junto com a nota "Metros acima do nível do mar" e o disclaimer
+"Valores estimados".
+
+
+====================================================================
+DICA: como exportar do WebODM
+====================================================================
+
+  CRS:                    EPSG:4326 (WGS84 / lat-lng)
+  Ortomosaico:            formato JPEG
+  Fitossanidade:          algoritmo VARI (câmera RGB) ou NDVI (multispectral)
+                          color map: RdYlGn   |   range: -0.3 a 0.5 (VARI)
+  MDS:                    color map: jet (ou similar com espectro completo)
+                          range: auto (deixar WebODM detectar min/max reais)

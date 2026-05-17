@@ -671,6 +671,298 @@ dialog#lightbox[open] {
 
 
 /* ==============================
+   MAPS VIEWER (WebODM)
+   ============================== */
+.map-viewer-wrapper {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--surface2);
+}
+
+.map-canvas {
+  width: 100%;
+  height: 600px;
+  background: var(--surface2);
+}
+
+.map-compare-container {
+  position: relative;
+  width: 100%;
+  height: 600px;
+}
+
+.map-canvas-left,
+.map-canvas-right {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+.map-canvas-left  { clip-path: inset(0 50% 0 0); }
+.map-canvas-right { clip-path: inset(0 0 0 50%); }
+
+.map-compare-slider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  background: var(--gold);
+  transform: translateX(-50%);
+  cursor: ew-resize;
+  z-index: 650;
+  touch-action: none;
+}
+.map-compare-slider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gold);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.5);
+}
+.map-compare-slider::after {
+  content: '\2194';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.map-selector-box {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 600;
+  background: rgba(18, 18, 18, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 14px 16px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-selector-title {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 2px;
+}
+
+.map-radio {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--text);
+  font-family: var(--font-body);
+}
+.map-radio input { accent-color: var(--gold); cursor: pointer; }
+.map-radio input:disabled { opacity: 0.45; cursor: not-allowed; }
+.map-radio input:disabled + span { opacity: 0.45; }
+
+.map-selector-sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 6px 0 2px;
+}
+
+.map-action-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.map-compare-toggle {
+  flex: 1;
+  padding: 8px 14px;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.map-compare-toggle:hover {
+  color: var(--text);
+  border-color: var(--gold);
+}
+.map-compare-toggle[aria-pressed="true"] {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+}
+
+.btn-mapa {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.btn-mapa:hover { color: var(--gold); border-color: var(--gold); }
+
+.map-compare-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.map-compare-side {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.map-compare-side > span {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.map-compare-side select {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 5px 8px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  cursor: pointer;
+  flex: 1;
+  max-width: 120px;
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 600;
+  background: rgba(18, 18, 18, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 10px 14px;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.map-legend-title {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.map-legend-bar {
+  height: 10px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #555, #aaa);
+}
+.map-legend-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+}
+.map-legend-note {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  margin-top: 2px;
+}
+.map-legend-disclaimer {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  opacity: 0.75;
+  font-style: italic;
+  font-family: var(--font-body);
+}
+
+/* Garante que [hidden] funcione mesmo com display:flex nas regras anteriores */
+.map-legend[hidden],
+.map-compare-pair[hidden],
+.map-compare-container[hidden],
+.map-legend-note[hidden],
+.map-legend-disclaimer[hidden] { display: none !important; }
+
+.map-quality-disclaimer {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  opacity: 0.75;
+  font-style: italic;
+  text-align: center;
+  margin-top: 8px;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+/* Fullscreen API — wrapper preenche a tela toda */
+.map-viewer-wrapper:fullscreen,
+.map-viewer-wrapper:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  border: none;
+  border-radius: 0;
+}
+.map-viewer-wrapper:fullscreen .map-canvas,
+.map-viewer-wrapper:-webkit-full-screen .map-canvas {
+  height: 100vh;
+}
+.map-viewer-wrapper:fullscreen .map-compare-container,
+.map-viewer-wrapper:-webkit-full-screen .map-compare-container {
+  height: 100vh;
+}
+
+/* Overrides Leaflet — tema dark */
+.leaflet-container {
+  background: var(--surface2);
+  font-family: var(--font-body);
+}
+.leaflet-control-attribution {
+  background: rgba(18, 18, 18, 0.72) !important;
+  color: var(--text-muted) !important;
+  font-size: 0.6rem !important;
+}
+.leaflet-control-attribution a { color: var(--gold) !important; }
+.leaflet-control-zoom a {
+  background: rgba(18, 18, 18, 0.78) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.leaflet-control-zoom a:hover { background: rgba(40, 40, 40, 0.92) !important; }
+
+
+/* ==============================
    RESPONSIVE
    ============================== */
 @media (max-width: 1024px) {
@@ -719,6 +1011,24 @@ dialog#lightbox[open] {
 
   #panorama-360 { height: 380px; }
 
+  .map-canvas,
+  .map-compare-container { height: 420px; }
+  .map-selector-box {
+    top: 8px;
+    right: 8px;
+    padding: 10px 12px;
+    min-width: 0;
+    max-width: calc(100% - 16px);
+  }
+  .map-radio { font-size: 0.72rem; }
+  .map-legend {
+    bottom: 8px;
+    left: 8px;
+    width: auto;
+    max-width: calc(100% - 16px);
+    padding: 8px 12px;
+  }
+
   footer {
     flex-direction: column;
     gap: 10px;
@@ -739,4 +1049,8 @@ dialog#lightbox[open] {
   .viewer-controls { padding: 8px 14px; gap: 6px; }
   .btn-360 { width: 34px; height: 34px; }
   .btn-360 svg { width: 17px; height: 17px; }
+
+  .map-canvas,
+  .map-compare-container { height: 340px; }
+  .map-compare-slider::before { width: 30px; height: 30px; }
 }
